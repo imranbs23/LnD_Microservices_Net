@@ -1,4 +1,4 @@
-namespace Play.Catalog.Service.Entities;
+namespace Play.Common;
 public interface IEntity
 {
     Guid Id { get; set; }
