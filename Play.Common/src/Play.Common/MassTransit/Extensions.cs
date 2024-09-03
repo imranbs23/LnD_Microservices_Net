@@ -24,6 +24,9 @@ public static class Extensions
                 var rabbitMqSettings = configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
                 confifurator.Host(rabbitMqSettings.Host);
                 confifurator.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceSettings.ServiceName, false));
+                confifurator.UseMessageRetry(retryConfifurator =>{
+                    retryConfifurator.Interval(3,TimeSpan.FromSeconds(5));
+                });
             });
         });
         //deprecated : https://masstransit.io/support/upgrade#addmasstransithostedservice-deprecated
