@@ -6,6 +6,7 @@ using Polly;
 using Polly.Timeout;
 
 var builder = WebApplication.CreateBuilder(args);
+var allowedOrigin = builder.Configuration["AllowedOrigin"];
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,6 +32,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(bldr =>
+    {
+        bldr.WithOrigins(allowedOrigin)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 }
 
 app.UseHttpsRedirection();

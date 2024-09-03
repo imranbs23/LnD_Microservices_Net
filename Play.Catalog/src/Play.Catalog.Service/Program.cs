@@ -3,7 +3,7 @@ using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var allowedOrigin = builder.Configuration["AllowedOrigin"];
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -11,9 +11,10 @@ builder.Services.AddMongo()
                 .AddMongoRepository<Item>("items")
                 .AddMassTransitWithRabbitMQ();
 
-builder.Services.AddControllers(options =>{
+builder.Services.AddControllers(options =>
+{
     options.SuppressAsyncSuffixInActionNames = false;
-}); 
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -24,6 +25,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(bldr =>
+    {
+        bldr.WithOrigins(allowedOrigin)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 }
 
 app.UseHttpsRedirection();
